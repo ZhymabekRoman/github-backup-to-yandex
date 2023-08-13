@@ -107,7 +107,8 @@ def yandex_upload(yandex_token: str, filename: str, file_path: str, file_ext: st
     if not client.check_token():
         raise ValueError("Yandex token is invalid!")
 
-    client.upload(file_path, f"/backup/github/{filename}.{file_ext}", timeout=80_000)
+    client.mkdir(f"/backup/github/{TIME}")
+    client.upload(file_path, f"/backup/github/{TIME}/{filename}.{file_ext}", timeout=80_000)
 
 
 if __name__ == '__main__':
