@@ -25,6 +25,9 @@ LOG_LEVEL = "DEBUG"
 BACKUP_FOLDER = "./backup-github"
 BACKUP_PART_SIZE_MB = 400
 
+client = yadisk.YaDisk(token=yandex_token)
+if not client.check_token():
+    raise ValueError("Yandex token is invalid!")
 
 # def base64_sink(message):
 #     encoded_message = base64.b64encode(message.encode('utf-8')).decode('utf-8')
@@ -103,11 +106,6 @@ def yandex_upload(yandex_token: str, filename: str, file_path: str, file_ext: st
     if not yandex_token:
         raise ValueError("No yandex token was found!")
 
-    client = yadisk.YaDisk(token=yandex_token)
-    if not client.check_token():
-        raise ValueError("Yandex token is invalid!")
-
-    client.mkdir(f"/backup/github/{TIME}")
     client.upload(file_path, f"/backup/github/{TIME}/{filename}.{file_ext}", timeout=80_000)
 
 
@@ -119,6 +117,7 @@ if __name__ == '__main__':
         main(args[0], args[1])
         filename, file_path = zip_folder()
         splited_backup = split_file(file_path, f"{BACKUP_FOLDER}-split", BACKUP_PART_SIZE_MB*(1048576))
+        client.mkdir(f"/backup/github/{TIME}")
         for file_path, filename in splited_backup:
             logger.debug(file_path, filename)
             yandex_upload(args[2], filename, file_path, 'png')
