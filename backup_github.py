@@ -20,12 +20,15 @@ from loguru import logger
 
 from loguru_handler import register_loguru
 
+args = sys.argv[1:]
+logger.debug(args)
+
 TIME = dt.now().strftime('%Y-%m-%d-%H-%M-%S')
 LOG_LEVEL = "DEBUG"
 BACKUP_FOLDER = "./backup-github"
 BACKUP_PART_SIZE_MB = 400
 
-client = yadisk.YaDisk(token=yandex_token)
+client = yadisk.YaDisk(token=args[2])
 if not client.check_token():
     raise ValueError("Yandex token is invalid!")
 
@@ -102,16 +105,11 @@ def absoluteFilePaths(directory):
 
 
 # https://medium.com/@kai_kebutsuka/how-to-upload-files-to-yandex-disk-using-python-d3211007d574
-def yandex_upload(yandex_token: str, filename: str, file_path: str, file_ext: str):
-    if not yandex_token:
-        raise ValueError("No yandex token was found!")
-
+def yandex_upload(filename: str, file_path: str, file_ext: str):
     client.upload(file_path, f"/backup/github/{TIME}/{filename}.{file_ext}", timeout=80_000)
 
 
 if __name__ == '__main__':
-    args = sys.argv[1:]
-    logger.debug(args)
     try:
         register_loguru()
         main(args[0], args[1])
@@ -120,7 +118,7 @@ if __name__ == '__main__':
         client.mkdir(f"/backup/github/{TIME}")
         for file_path, filename in splited_backup:
             logger.debug(file_path, filename)
-            yandex_upload(args[2], filename, file_path, 'png')
+            yandex_upload(filename, file_path, 'png')
     except Exception as e:
         logger.exception(str(e))
         sys.exit(1)
