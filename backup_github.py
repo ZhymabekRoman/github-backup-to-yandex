@@ -32,7 +32,7 @@ logging.root.setLevel(LOG_LEVEL)
 @click.command()
 @click.option('--yd-token', prompt='Yandex Disk token')
 @click.option('--github-token', prompt='GitHub classic token')
-@click.option('--accounts', prompt='Accounts to backup in syntax: accountType:username', multiple=True)
+@click.option('--accounts', '-a', prompt='Accounts to backup in syntax: accountType:username', multiple=True)
 def backup(yd_token: str, github_token: str, accounts: str):
     logger.debug("Initializing YandexDisk client...")
     yd_client = yadisk.YaDisk(token=yd_token)
