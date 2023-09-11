@@ -3,7 +3,7 @@ name: Upload GitHub backup
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 */48 * * *"
+    - cron: "0 0 */2 * *"
 
 jobs:
   backup:
