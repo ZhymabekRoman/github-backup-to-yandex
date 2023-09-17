@@ -12,3 +12,7 @@
 - `--accounts` - аккаунты GitHub, которые требуется забэкапить. Формат значения: `user|ИмяПользователя org|НазваниеОрганизации`. Здесь `user` и `org` обозначают тип аккаунта, после символа `|` указывается имя пользователя или название организации. Список аккаунтов разделяется пробелами.
 
 - `--yd-token` - токен Яндекс.Диска. Инструкцию по получению токена можно найти здесь: [ссылка на инструкцию](https://medium.com/@kai_kebutsuka/how-to-upload-files-to-yandex-disk-using-python-d3211007d574).
+
+## TODO:
+- Compress using `ZSTD`: https://pyzstd.readthedocs.io/en/latest/
+- Use Yandex Disk private API to workaround upload limits: https://github.com/yar229/WebDavMailRuCloud
