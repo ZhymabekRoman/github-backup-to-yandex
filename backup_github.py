@@ -1,10 +1,9 @@
 from argparse import Namespace
 import logging
 import os
-import shutil
 from datetime import datetime as dt
 import click
-
+import tarfile
 import yadisk
 from filesplit.split import Split
 from github_backup.github_backup import (
@@ -16,11 +15,14 @@ from github_backup.github_backup import (
     retrieve_repositories,
 )
 from loguru import logger
+import pyzstd
+from pyzstd import CParameter
 
 from loguru_handler import register_loguru
 
 register_loguru()
 
+PYZSTD_OPTIONS = {CParameter.nbWorkers: os.cpu_count() + 1, CParameter.compressionLevel: 15}
 TIME = dt.now().strftime('%Y-%m-%d-%H-%M-%S')
 LOG_LEVEL = "DEBUG"
 BACKUP_FOLDER = "./backup-github"
@@ -72,7 +74,7 @@ def backup(yd_token: str, github_token: str, accounts: str):
         backup_repositories(args, output_directory, repositories)
         backup_account(args, output_directory)
 
-    filename, file_path = zip_folder()
+    file_path = compress_folder()
     splited_backup = split_file(file_path, f"{BACKUP_FOLDER}-split", BACKUP_PART_SIZE_MB * (1048576))
     yd_client.mkdir(f"/backup/github/{TIME}")
     for file_path, filename in splited_backup:
@@ -80,7 +82,7 @@ def backup(yd_token: str, github_token: str, accounts: str):
         yd_client.upload(file_path, f"/backup/github/{TIME}/{filename}.png", timeout=80_000)
 
 
-def sizeof_fmt(num, suffix="B"):
+def sizeof_fmt(num, suffix="B") -> str:
     for unit in ["", "Ki", "Mi", "Gi", "Ti", "Pi", "Ei", "Zi"]:
         if abs(num) < 1024.0:
             return f"{num:3.1f}{unit}{suffix}"
@@ -88,17 +90,25 @@ def sizeof_fmt(num, suffix="B"):
     return f"{num:.1f}Yi{suffix}"
 
 
-def zip_folder(folder: str = BACKUP_FOLDER):
-    backup_zip_filename = f"backup-{TIME}"
-    output_zip_file = shutil.make_archive(backup_zip_filename, 'zip', folder)
-    logger.debug(f"ZIP file size: {sizeof_fmt(os.path.getsize(output_zip_file))}")
-    return backup_zip_filename, output_zip_file
+def compress_folder(folder: str = BACKUP_FOLDER) -> str:
+    backup_compress_filename = f"backup-{TIME}"
+    output_tar_filename = f"{backup_compress_filename}.tar"
+    output_zstd_filename = f"{backup_compress_filename}.tar.zst"
+
+    with tarfile.open(output_tar_filename, 'w') as tar:
+        tar.add(folder)
+
+    with open(output_tar_filename, 'rb') as tar, open(output_zstd_filename, 'wb') as zst:
+        data = tar.read()
+        zst.write(pyzstd.compress(data, PYZSTD_OPTIONS))
+
+    logger.debug(f"TAR.ZST file size: {sizeof_fmt(os.path.getsize(output_zstd_filename))}")
+    return output_zstd_filename
 
 
-def split_file(file: str, output_dir: str, size: int):
+def split_file(file: str, output_dir: str, size: int) -> list[tuple[str, str]]:
     os.makedirs(output_dir, exist_ok=True)
     split = Split(file, output_dir)
-    split.manfilename = f"manifest_{TIME}"
     split.bysize(size)
     return absoluteFilePaths(output_dir)
 

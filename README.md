@@ -5,6 +5,9 @@
 ## Зависимости:
 - [python-github-backup](https://github.com/josegonzalez/python-github-backup) - утилита для бэкапирования GitHub.
 - [yadisk](https://github.com/ivknv/yadisk) - бибилотека для работы с REST API Яндекс.Диска
+- [pyzstd](https://github.com/animalize/pyzstd) - бибилотека для работы с ZSTD
+- [click](https://click.palletsprojects.com/en/8.1.x/) - бибилотека для работы с командной строкой
+- [filesplit](https://github.com/ram-jayapalan/filesplit) - бибилотека для резки файлов
 
 ## Параметры:
 - `--github-token` - токен GitHub с необходимыми разрешениями для создания бэкапа (доступ к Gists, организациям, приватным репозиториям и т.д.).
@@ -14,5 +17,4 @@
 - `--yd-token` - токен Яндекс.Диска. Инструкцию по получению токена можно найти здесь: [ссылка на инструкцию](https://medium.com/@kai_kebutsuka/how-to-upload-files-to-yandex-disk-using-python-d3211007d574).
 
 ## TODO:
-- Compress using `ZSTD`: https://pyzstd.readthedocs.io/en/latest/
 - Use Yandex Disk private API to workaround upload limits: https://github.com/yar229/WebDavMailRuCloud

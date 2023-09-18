@@ -1,4 +1,5 @@
 loguru==0.7.0
+pyzstd==0.15.9
 click==8.1.7
 yadisk==1.3.3
 filesplit==4.0.1
