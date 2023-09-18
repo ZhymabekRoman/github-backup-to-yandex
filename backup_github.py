@@ -15,8 +15,7 @@ from github_backup.github_backup import (
     retrieve_repositories,
 )
 from loguru import logger
-import pyzstd
-from pyzstd import CParameter
+from pyzstd import CParameter, ZstdFile
 
 from loguru_handler import register_loguru
 
@@ -95,12 +94,15 @@ def compress_folder(folder: str = BACKUP_FOLDER) -> str:
     output_tar_filename = f"{backup_compress_filename}.tar"
     output_zstd_filename = f"{backup_compress_filename}.tar.zst"
 
+    logger.debug("Compressing folder into tar...")
     with tarfile.open(output_tar_filename, 'w') as tar:
         tar.add(folder)
 
-    with open(output_tar_filename, 'rb') as tar, open(output_zstd_filename, 'wb') as zst:
+    logger.debug("Compressing tar into zstd...")
+    with open(output_tar_filename, 'rb') as tar, ZstdFile(output_zstd_filename, 'w', level_or_option=PYZSTD_OPTIONS) as zst:
+        logger.debug("Reading tar....")
         data = tar.read()
-        zst.write(pyzstd.compress(data, PYZSTD_OPTIONS))
+        zst.write(data)
 
     logger.debug(f"TAR.ZST file size: {sizeof_fmt(os.path.getsize(output_zstd_filename))}")
     return output_zstd_filename
