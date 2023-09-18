@@ -22,7 +22,7 @@ from loguru_handler import register_loguru
 
 register_loguru()
 
-PYZSTD_OPTIONS = {CParameter.nbWorkers: os.cpu_count() + 1, CParameter.compressionLevel: 15}
+PYZSTD_OPTIONS = {CParameter.nbWorkers: os.cpu_count(), CParameter.compressionLevel: 10}
 TIME = dt.now().strftime('%Y-%m-%d-%H-%M-%S')
 LOG_LEVEL = "DEBUG"
 BACKUP_FOLDER = "./backup-github"
