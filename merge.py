@@ -1,22 +1,40 @@
-import tarfile
-import pyzstd
+import os
 from filesplit.merge import Merge
 
-OUTPUT_FILENAME = "full_github_backup"
-OUTPUT_FILENAME_TAR = f"{OUTPUT_FILENAME}.tar"
-OUTPUT_FILENAME_TAR_ZST = f"{OUTPUT_FILENAME}.tar.zst"
+def delete_file_extension(filename):
+    """Deletes the file extension of a file.
+
+    Args:
+        filename: The path to the file.
+    """
+
+    basename = os.path.basename(filename)
+    ext = os.path.splitext(basename)[1]
+    new_filename = basename.replace(ext, "")
+    os.rename(filename, os.path.join(os.path.dirname(filename), new_filename))
 
 
-def main(backup_folder: str):
-    merge = Merge(inputdir=backup_folder, outputdir="BACKUP_OUTPUT_FOLDER", outputfilename=OUTPUT_FILENAME)
+def delete_file_extensions_in_folder(folder_path):
+    """Deletes the file extension of all files in a folder.
+
+    Args:
+        folder_path: The path to the folder.
+    """
+
+    for file in os.listdir(folder_path):
+        file_path = os.path.join(folder_path, file)
+        if os.path.isfile(file_path):
+            delete_file_extension(file_path)
+
+
+def main(folder: str = "./", output_folder: str = "BACKUP_OUTPUT_FOLDER"):
+    delete_file_extensions_in_folder(folder)
+
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+
+    merge = Merge(inputdir=./, outputdir=output_folder, outputfilename="full_github_backup.tar.zstd")
     merge.merge()
-
-    with open(OUTPUT_FILENAME_TAR_ZST, 'rb') as zst, open(OUTPUT_FILENAME_TAR, 'wb') as tar:
-        data = zst.read()
-        tar.write(pyzstd.decompress(data))
-
-    with tarfile.open(OUTPUT_FILENAME_TAR, 'rb') as tar:
-        tar.extractall()
 
 
 main()
