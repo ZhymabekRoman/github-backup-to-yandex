@@ -27,8 +27,8 @@ jobs:
 
       - name: Install packages
         run: |
-          apt update
-          apt install python3 python3-distutils git sudo curl -y
+          sudo apt update
+          sudo apt install python3 python3-distutils git sudo curl -y
 
       - name: Install Python3 requirements
         run: |
