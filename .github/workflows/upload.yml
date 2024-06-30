@@ -39,6 +39,6 @@ jobs:
         env:
           LOGURU_COLORIZE: NO
           YANDEX_TOKEN: ${{ secrets.YANDEX_TOKEN }}
-          GITHUB_ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
         run: |
-          sudo python3 backup_github.py --github-token $GITHUB_ACCESS_TOKEN --yd-token $YANDEX_TOKEN -a "user|ZhymabekRoman" -a "org|Freedium-cfd" -a "org|Scorebook-Fruit-Seizing"
+          sudo python3 backup_github.py --github-token $GITHUB_ACCESS_TOKEN --yd-token $YANDEX_TOKEN -a "user|ZhymabekRoman" -a "org|Silk-Skillet-Jokester" -a "org|Scorebook-Fruit-Seizing"
