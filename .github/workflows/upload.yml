@@ -8,11 +8,13 @@ on:
 jobs:
   backup:
     runs-on: ubuntu-22.04
-    # container: debian:11-slim
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+          fetch-depth: 0
 
       - name: Free up space
         run: |
@@ -28,12 +30,11 @@ jobs:
       - name: Install packages
         run: |
           sudo apt update
-          sudo apt install python3 python3-distutils git sudo curl -y
+          sudo apt install python3 python3-distutils git python3-pip curl -y
 
       - name: Install Python3 requirements
         run: |
-          sudo curl https://bootstrap.pypa.io/get-pip.py | python3
-          sudo pip3 install -r requirements.txt
+          pip3 install -r requirements.txt
 
       - name: Execute backup
         env:
@@ -41,4 +42,4 @@ jobs:
           YANDEX_TOKEN: ${{ secrets.YANDEX_TOKEN }}
           GITHUB_ACCESS_TOKEN: ${{ secrets.ACCESS_GITHUB_TOKEN }}
         run: |
-          sudo python3 backup_github.py --github-token $GITHUB_ACCESS_TOKEN --yd-token $YANDEX_TOKEN -a "user|ZhymabekRoman" -a "org|Silk-Skillet-Jokester" -a "org|Scorebook-Fruit-Seizing"
+          python3 backup_github.py --github-token $GITHUB_ACCESS_TOKEN --yd-token $YANDEX_TOKEN -a "user|ZhymabekRoman" -a "org|Silk-Skillet-Jokester" -a "org|Scorebook-Fruit-Seizing"
