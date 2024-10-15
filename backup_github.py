@@ -2,7 +2,7 @@ import logging
 import os
 import tarfile
 from argparse import Namespace
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime as dt
 
 import click
