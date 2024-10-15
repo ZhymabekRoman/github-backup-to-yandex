@@ -24,9 +24,13 @@ from loguru_handler import register_loguru
 register_loguru()
 
 
+def default_pyzstd_options():
+    return {CParameter.nbWorkers: max(1, os.cpu_count() or 1), CParameter.compressionLevel: 18}
+
+
 @dataclass
 class GithubBackupConfig:
-    PYZSTD_OPTIONS: dict[CParameter, int] = {CParameter.nbWorkers: max(1, os.cpu_count() or 1), CParameter.compressionLevel: 18}
+    PYZSTD_OPTIONS: dict[CParameter, int] = field(default_factory=default_pyzstd_options)
     TIME: str = dt.now().strftime("%Y-%m-%d-%H-%M-%S")
     LOG_LEVEL: str = "DEBUG"
     BACKUP_FOLDER: str = "./backup-github"
