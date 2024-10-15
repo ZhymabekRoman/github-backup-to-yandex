@@ -7,7 +7,7 @@ on:
 
 jobs:
   backup:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     # container: debian:11-slim
 
     steps:
