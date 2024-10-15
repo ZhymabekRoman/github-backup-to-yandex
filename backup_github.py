@@ -26,7 +26,7 @@ register_loguru()
 
 @dataclass
 class GithubBackupConfig:
-    PYZSTD_OPTIONS = {CParameter.nbWorkers: os.cpu_count() if (cpu_count := os.cpu_count()) else 1 + 1, CParameter.compressionLevel: 18}
+    PYZSTD_OPTIONS: dict[CParameter, int] = {CParameter.nbWorkers: max(1, os.cpu_count() or 1), CParameter.compressionLevel: 18}
     TIME: str = dt.now().strftime("%Y-%m-%d-%H-%M-%S")
     LOG_LEVEL: str = "DEBUG"
     BACKUP_FOLDER: str = "./backup-github"
@@ -63,8 +63,9 @@ def backup(yd_token: str, github_token: str, accounts: str):
             user=user,
             username=None,
             password=None,
-            token_fine=None,
             token_classic=github_token,
+            token_fine=None,
+            quiet=False,
             as_app=True,
             output_directory=config.BACKUP_FOLDER,
             log_level=config.LOG_LEVEL,
@@ -89,7 +90,7 @@ def backup(yd_token: str, github_token: str, accounts: str):
             bare_clone=False,
             no_prune=False,
             lfs_clone=False,
-            include_wiki=False,
+            include_wiki=True,
             include_gists=True,
             include_starred_gists=False,
             skip_archived=False,
@@ -105,6 +106,8 @@ def backup(yd_token: str, github_token: str, accounts: str):
             osx_keychain_item_name=None,
             osx_keychain_item_account=None,
             include_releases=True,
+            number_of_latest_releases=0,
+            skip_prerelease=False,
             include_assets=False,
             throttle_limit=0,
             throttle_pause=30.0,
