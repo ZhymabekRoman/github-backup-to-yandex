@@ -35,12 +35,11 @@ jobs:
       - name: Install packages
         run: |
           sudo apt update
-          sudo apt install python3 python3-distutils git sudo curl -y
+          sudo apt install python3 python3-distutils python3-pip git curl -y
 
       - name: Install Python3 requirements
         run: |
-          sudo curl https://bootstrap.pypa.io/get-pip.py | python3
-          sudo pip3 install -r requirements.txt
+          pip3 install -r requirements.txt
 
       - name: Execute backup
         env:
@@ -49,7 +48,7 @@ jobs:
           GITHUB_ACCESS_TOKEN: ${{ secrets.ACCESS_GITHUB_TOKEN }}
         continue-on-error: true
         run: |
-          sudo python3 backup_github.py --github-token $GITHUB_ACCESS_TOKEN --yd-token $YANDEX_TOKEN -a "user|ZhymabekRoman" -a "org|Silk-Skillet-Jokester" -a "org|Scorebook-Fruit-Seizing"
+          python3 backup_github.py --github-token $GITHUB_ACCESS_TOKEN --yd-token $YANDEX_TOKEN -a "user|ZhymabekRoman" -a "org|Silk-Skillet-Jokester" -a "org|Scorebook-Fruit-Seizing"
 
       - name: Debugging with ssh
         uses: lhotari/action-upterm@v1
