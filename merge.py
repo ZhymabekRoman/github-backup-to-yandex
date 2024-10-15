@@ -29,7 +29,7 @@ def delete_file_extensions_in_folder(folder_path):
 
 
 @click.command()
-@click.option("--folder", default="./", help="Input folder path")
+@click.option("--folder", help="Input folder path")
 @click.option("--output-folder", default="BACKUP_OUTPUT_FOLDER", help="Output folder path")
 def main(folder, output_folder):
     delete_file_extensions_in_folder(folder)

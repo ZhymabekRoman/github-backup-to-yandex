@@ -6,7 +6,6 @@ from dataclasses import dataclass, field
 from datetime import datetime as dt
 
 import click
-import yadisk
 from filesplit.split import Split
 from github_backup.github_backup import (
     backup_account,
@@ -49,9 +48,9 @@ def backup(yd_token: str, github_token: str, accounts: str):
     config = GithubBackupConfig()
 
     logger.debug("Initializing YandexDisk client...")
-    yd_client = yadisk.YaDisk(token=yd_token)
-    if not yd_token or not yd_client.check_token():
-        raise ValueError("Yandex Disk token is invalid!")
+    # yd_client = yadisk.YaDisk(token=yd_token)
+    # if not yd_token or not yd_client.check_token():
+    #     raise ValueError("Yandex Disk token is invalid!")
 
     if not github_token:
         raise ValueError("No Github Access token was found!")
