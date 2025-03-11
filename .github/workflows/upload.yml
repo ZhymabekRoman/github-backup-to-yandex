@@ -42,4 +42,4 @@ jobs:
           YANDEX_TOKEN: ${{ secrets.YANDEX_TOKEN }}
           GITHUB_ACCESS_TOKEN: ${{ secrets.ACCESS_GITHUB_TOKEN }}
         run: |
-          python3 backup_github.py --github-token $GITHUB_ACCESS_TOKEN --yd-token $YANDEX_TOKEN -a "user|ZhymabekRoman" -a "org|build-on-ai" -a "org|Scorebook-Fruit-Seizing"
+          python3 backup_github.py --github-token $GITHUB_ACCESS_TOKEN --yd-token $YANDEX_TOKEN -a "user|ZhymabekRoman" -a "org|build-on-ai" -a "org|mars-edu"
